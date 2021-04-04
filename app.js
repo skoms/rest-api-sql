@@ -16,6 +16,9 @@ const app = express();
 // setup morgan which gives us http request logging
 app.use(morgan('dev'));
 
+// Parsing incoming data to JSON
+app.use(express.json());
+
 // Authenticate connection to the database
 sequelize
   .authenticate()
@@ -26,15 +29,15 @@ sequelize
     console.log('Connection to the database failed: ', err);
   });
 
+// Use the 'routes.js' router to handle requests to '/api' 
+app.use('/api', routes);
+
 // setup a friendly greeting for the root route
 app.get('/', asyncHandler(async (req, res) => {
   res.json({
     message: 'Welcome to the REST API project!',
   });
 }));
-
-// Use the 'routes.js' router to handle requests to '/api' 
-app.use('/api', routes);
 
 // send 404 if no other route matched
 app.use((req, res) => {
@@ -52,6 +55,7 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({
     message: err.message,
     error: {},
+    stack: err.stack,
   });
 });
 
