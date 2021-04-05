@@ -1,4 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
+const bcrypt = require('bcryptjs');
 
 module.exports = (sequelize) => {
   class User extends Model { }
@@ -9,6 +10,15 @@ module.exports = (sequelize) => {
       validate: {
         notNull: {
           msg: 'Please provide a value for "firstName"'
+        },
+        notEmpty: {
+          msg: 'Please provide a value for "title"'
+        }
+      },
+      set(val) { // set to lowercase after validation to have more consistent data
+        if (val) {
+          const lowercased = val.toLowerCase();
+          this.setDataValue('firstName', lowercased);
         }
       }
     },
@@ -18,24 +28,41 @@ module.exports = (sequelize) => {
       validate: {
         notNull: {
           msg: 'Please provide a value for "lastName"'
+        },
+        notEmpty: {
+          msg: 'Please provide a value for "title"'
+        }
+      },
+      set(val) { // set to lowercase after validation to have more consistent data
+        if (val) {
+          const lowercased = val.toLowerCase();
+          this.setDataValue('lastName', lowercased);
         }
       }
     },
-    emailAddress: {
+    emailAddress: { // set to lowercase after validation to have more consistent data and for easier login, see 'user-auth' middleware
       type: DataTypes.STRING,
+      unique: true,
       allowNull: false,
       validate: {
         isEmail: {
-          msg: 'Please provide a valid "emailAddress"'
+          msg: 'Please provide a valid email address for "emailAddress"'
+        }
+      },
+      set(val) {
+        if (val) {
+          const lowercased = val.toLowerCase();
+          this.setDataValue('emailAddress', lowercased);
         }
       }
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        notNull: {
-          msg: 'Please provide a value for "password"'
+      set(val) {
+        if (val) {
+          const hashedPassword = bcrypt.hashSync(val, 10);
+          this.setDataValue( 'password', hashedPassword);
         }
       }
     },

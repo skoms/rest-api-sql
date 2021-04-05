@@ -5,9 +5,27 @@ module.exports = (sequelize) => {
   Course.init({
     title: {
       type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Please provide a value for "title"'
+        },
+        notEmpty: {
+          msg: 'Please provide a value for "title"'
+        }
+      }
     },
     description: {
       type: DataTypes.TEXT,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Please provide a value for "description"'
+        },
+        notEmpty: {
+          msg: 'Please provide a value for "description"'
+        }
+      }
     },
     estimatedTime: {
       type: DataTypes.STRING,
@@ -21,7 +39,6 @@ module.exports = (sequelize) => {
     Course.belongsTo(models.User, {
       foreignKey: {
         fieldName: 'userId',
-        allowNull: false,
       }
     });
   }

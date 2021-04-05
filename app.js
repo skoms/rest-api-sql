@@ -48,14 +48,27 @@ app.use((req, res) => {
 
 // setup a global error handler
 app.use((err, req, res, next) => {
+  let errors;
   if (enableGlobalErrorLogging) {
     console.error(`Global error handler: ${JSON.stringify(err.stack)}`);
   }
+  
+  if (err.name === 'SequelizeValidationError') {
+    err.status = 400;
+    errors = err.errors.map(err => err.message);
+    console.error('Validation errors: ', errors);
+  }
+
+  if (err.name === 'SequelizeUniqueConstraintError') {
+    err.status = 400;
+    err.message = 'The email is already in use.';
+    console.error('Unique Constraint Error: ', err.message);
+  }
 
   res.status(err.status || 500).json({
-    message: err.message,
-    error: {},
-    stack: err.stack,
+    name: err.name,
+    message: (errors || err.message),
+    error: err.stack
   });
 });
 
