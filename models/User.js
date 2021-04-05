@@ -40,7 +40,7 @@ module.exports = (sequelize) => {
         }
       }
     },
-    emailAddress: { // set to lowercase after validation to have more consistent data and for easier login, see 'user-auth' middleware
+    emailAddress: { 
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
@@ -49,7 +49,7 @@ module.exports = (sequelize) => {
           msg: 'Please provide a valid email address for "emailAddress"'
         }
       },
-      set(val) {
+      set(val) { // set to lowercase after validation to have more consistent data and for easier login, see 'user-auth' middleware
         if (val) {
           const lowercased = val.toLowerCase();
           this.setDataValue('emailAddress', lowercased);
@@ -59,7 +59,7 @@ module.exports = (sequelize) => {
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-      set(val) {
+      set(val) { // Hashes the plain-text password and stores the hashed version to the database
         if (val) {
           const hashedPassword = bcrypt.hashSync(val, 10);
           this.setDataValue( 'password', hashedPassword);

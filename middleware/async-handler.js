@@ -1,3 +1,4 @@
+// 'asyncHandler' middleware to help reduce repeated code with try-catch blocks etc
 module.exports = (callback) => {
   return async(req, res, next) => {
     try {

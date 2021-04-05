@@ -29,13 +29,13 @@ sequelize
     console.log('Connection to the database failed: ', err);
   });
 
-// Use the 'routes.js' router to handle requests to '/api' 
+// Use the '/routes/index.js' router to handle requests to '/api' 
 app.use('/api', routes);
 
 // setup a friendly greeting for the root route
 app.get('/', asyncHandler(async (req, res) => {
   res.json({
-    message: 'Welcome to the REST API project!',
+    message: 'Welcome to my REST API project, please enjoy your stay!',
   });
 }));
 
@@ -53,22 +53,24 @@ app.use((err, req, res, next) => {
     console.error(`Global error handler: ${JSON.stringify(err.stack)}`);
   }
   
+  // Checks and deals with validation errors
   if (err.name === 'SequelizeValidationError') {
     err.status = 400;
     errors = err.errors.map(err => err.message);
     console.error('Validation errors: ', errors);
   }
 
+  // Checks and deals with unique constraint errors
   if (err.name === 'SequelizeUniqueConstraintError') {
     err.status = 400;
     err.message = 'The email is already in use.';
     console.error('Unique Constraint Error: ', err.message);
   }
 
+  // if the error doesn't have any values it defaults to '500 - Internal Server Error'
   res.status(err.status || 500).json({
     name: err.name,
-    message: (errors || err.message),
-    error: err.stack
+    message: (errors || err.message)
   });
 });
 
