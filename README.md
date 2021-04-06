@@ -14,4 +14,4 @@ In this project I made a REST API using express. This API provides a way to admi
 
 ## Additions
 * User Login - Username is case insensitive
-* User Login - Password requirements: 8 - 20 characters, minimum 1 lowercase letter, 1 uppercase letter and a digit 
+* User Login - Password requirements: 8 - 20 characters, minimum 1 lowercase letter, 1 uppercase letter and a digit ( Commented out to prevent conflicting with project requirements, but feel free to uncomment to see that it works perfectly :^) )
